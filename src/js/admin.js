@@ -1,4 +1,5 @@
 var OPTIMIZELY_TOKEN_NAME = "optimizely_api_token";
+var OPTIMIZELY_MESSAGES = "optimizely_messages";
 
 /**
  * This function is executed when all project have been retreived from the API
@@ -74,7 +75,34 @@ var doAPICAll = function(url, func){
     });  
 }
 
+/**
+ * Store all messages
+ */
+var setMessages = function(messages){
+  Storage.set(OPTIMIZELY_MESSAGES, JSON.stringify(messages));
+}
+
+/**
+ * Save all messages
+ */
+var getMessages = function(){
+  return JSON.parse(Storage.get(OPTIMIZELY_MESSAGES));
+}
+
+var initMessages = function(){
+  $("#savemessages").click(function(){
+    var messages = [];
+    $(".message > textarea").each(function(i,e){
+      messages.push($(e).val());
+    });
+    setMessages(messages);
+  });
+
+  var messages = getMessages();
+}
+
+
 $(function(){
   initProjectList();
-
+  initMessages();
 });
