@@ -76,4 +76,5 @@ position: absolute;
 }
 #project-chart > svg {
   width: 100%;
+  overflow: visible;
 }

@@ -16,7 +16,9 @@ var arc = d3.svg.arc();
 var pie = d3.layout.pie()
     .sort(null);
 
-var svg = d3.select("#project-chart").append("svg");
+var svg = d3.select("#project-chart").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
 svg.selectAll(".arc")
     .data(arcs(data, olddata))
