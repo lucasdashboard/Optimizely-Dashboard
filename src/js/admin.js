@@ -1,4 +1,9 @@
-var projectSuccessFunction = function (data) {
+var OPTIMIZELY_TOKEN_NAME = "optimizely_api_token";
+
+/**
+ * This function is executed when all project have been retreived from the API
+ */
+var projectSuccess = function (data) {
   for(var i = 0; i < data.length; i++){
     var project = data[i];
     var project_id = project.id;
@@ -8,37 +13,68 @@ var projectSuccessFunction = function (data) {
 
 };
 
-var experimentSuccessFunction = function (d) {
+/**
+ * This function is executed when all experiment have been retreived from the API
+ */
+var experimentSuccess = function (d) {
   console.log(d);
 };
 
-
+/**
+ * Get token value from input field, store it and return it.
+ */
 var getTokenInput = function(){
-  return $("#tokeninput").val();
+  var token = $("#tokeninput").val();
+  Storage.set(OPTIMIZELY_TOKEN_NAME,token)
+  return token;
+}
+var getTokenFromStorage = function(){
+  return Storage.get(OPTIMIZELY_TOKEN_NAME);
 }
 
-var getProjectList = function(){
+/**
+ * Add click event to submit token button and if token is saved, use that to start load.
+ */
+var initProjectList = function(){
+  $("#tokeninput").val(getTokenFromStorage());
+  var token = getTokenInput();
+  if(token != ""){
+    getProject(token);
+  }
+
   $("#tokenbutton").click(function(){
-    jQuery.ajax({
-        dataType: "json",
-        url: 'https://www.optimizelyapis.com/experiment/v1/projects/',
-        headers: { 'Token': getTokenInput() },
-        success: projectSuccessFunction
-    });
+    getProject(getTokenInput());
   });
+
 }
 
-var getExperimentList = function(project_id){
+/**
+ * Do api call to retreive all project data
+ */
+var getProject = function(token){
+  doAPICAll('https://www.optimizelyapis.com/experiment/v1/projects/', projectSuccess);
+};
 
+/**
+ * Do api call to retreive all experiment data
+ */
+var getExperimentList = function(project_id){
+    doAPICAll('https://www.optimizelyapis.com/experiment/v1/projects/' + project_id + '/experiments/', experimentSuccess);
+}
+
+/**
+ * Set proper headers and do ajax call.
+ */
+var doAPICAll = function(url, func){
     jQuery.ajax({
         dataType: "json",
-        url: 'https://www.optimizelyapis.com/experiment/v1/projects/' + project_id + '/experiments/',
-        headers: { 'Token': getTokenInput() },
-        success: experimentSuccessFunction
-    });
+        url: url,
+        headers: { 'Token': getTokenFromStorage() },
+        success: func
+    });  
 }
 
 $(function(){
-  getProjectList();
+  initProjectList();
 
 });
