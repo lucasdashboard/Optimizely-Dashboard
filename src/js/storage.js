@@ -3,5 +3,6 @@ Storage.set = function(name, value){
   localStorage.setItem(name, value);
 }
 Storage.get = function(name){
-  return localStorage.getItem(name);
+  var val = localStorage.getItem(name);
+  return typeof(val) == "undefined" || val === null ? "" : val;
 }

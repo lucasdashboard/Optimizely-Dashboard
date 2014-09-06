@@ -5,9 +5,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Optimization Dashboard - Admin</title>
+        <title>Travix Optimization Dashboard</title>
         <!-- Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -15,58 +17,118 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <link rel="stylesheet" type="text/css" href="css/admin.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     
     <body>
+        <div id="header">
+            <div class="logo">
+                <img src="images/logo-white.png" />
+            </div>
+            <div class="marquee">
+                <div class="left">Optimization Dashboard - Admin</div>
+            </div>
+            <div class="right">
+                <button type="button" href="src/index.html" class="btn btn-default">Go to Dashboard</button>
+            </div>
+        </div>
         <div class="container-fluid" id="content">
             <div class="row">
                 <div class="col-md-6" id="data-col">
-                    <div class="row">Token
-                        <br>
-                        <input type="text" name="token" id="tokeninput">
-                        <br>
-                        <br>
-                        <button type="button" class="btn btn-default" id="tokenbutton">Save</button>
-                    </div>
                     <div class="row">
-                        <br>Experimenten
-                        <br>
-                        <br>
-                        <div class="list-group"> <a href="#" class="list-group-item active"><span class="badge">14</span>Cheaptickets.nl</a>
- <a href="#" class="list-group-item"><span class="badge">14</span>Cheaptickets.de</a>
- <a href="#" class="list-group-item"><span class="badge">14</span>Cheaptickets.be</a>
- <a href="#" class="list-group-item"><span class="badge">14</span>Vliegwinkel.nl</a>
- <a href="#" class="list-group-item"><span class="badge">14</span>Budgetair.nl</a>
+                        <div class="col-md-6" id="Token">
+                             <h2>Token</h2>
 
+                            <form class="navbar-form navbar-left" role="form" onSubmit="return false;" id="tokenform">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Enter token" id="tokeninput" />
+                                </div>
+                                <button type="submit" class="btn btn-default" id="tokensubmit">Submit</button>
+                                <input type="checkbox" data-bind="checked: filterArchived" /> <label>Filter Archived</label>
+                            </form>
+                        </div>
+                        <div class="col-md-6" id="experiments-running">
+                            <div class="row" data-bind="visible: loaded() == 2">
+                                <div id="big-num-experiments" data-bind="text: numexps"></div>
+                                <div id="experiments-running-text">Running
+                                    <br/>Experiments</div>
+                            </div>
+                            <div class="row" data-bind="visible: loaded() == 1">
+                                <div id="experiments-running-text">Loading ...</div>
+                            </div>
+                            <div class="row" data-bind="visible: loaded() == 0">
+                                <div id="experiments-running-text">Please submit token</div>
+                            </div>                                                        
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6"></div>
+                    <div class="row" data-bind="visible: projects().length > 0">
+                         <h2>Experiments</h2>
+
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default" data-bind="foreach: projects">
+                                <div class="panel-heading"> 
+                                    <a data-toggle="collapse" data-parent="#accordion" class="list-group-item" data-bind="attr: { href: '#collapse' + id}">
+                                        <h4 class="panel-title" data-bind="text:name"></h4>       
+                                        <span class="badge" data-bind="text: experiments().length">0</span>
+                                    </a>
+                                    <div class="clear"></div>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse" data-bind="attr: { id: 'collapse' + id}">
+                                        <div class="options">
+                                          <div class="select-options">
+                                          <a>(un)select all</a> | <a>(un)select running</a> | <a>(un)select draft</a> | <a>(un)select paused</a></div>
+                                          
+                                          <div class="other-options">
+                                            test
+                                          </div>    
+                                          <div class="clear"></div>
+                                          </div>                                
+                                    <div class="panel-body" data-bind="foreach: experiments">
+
+                                        <div class="checkbox" >
+                                            <label>
+                                                <input type="checkbox" class="experiment-id-checkbox" data-bind="attr: {experiment_id : id}, checked: saved"/>
+
+                                                <span data-bind="text: description"> </span>
+                                                <span class="status" data-bind="text: '[' + status + ']', css: status">[Running]</span></label> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6" id="visual-col">
                     <div class="row">
                         <div class="col-md-12" id="messages">
-                    <h1>Messages</h1>
-                    <div class="row">
-                        <div class="col-md-2">Message 1:</div>
-                        <div class="col-md-10 message"><textarea></textarea></div>                        
-                    </div>
-                </div>
-            </div>
-                    
+                             <h1>Messages</h1>
 
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-default" id="savemessages">Save</button>
                 </div>
-            </div>
-        </div>
-        </div>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="js/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/storage.js"></script>
-        <script src="js/admin.js"></script>
+                <div class="clear"></div>
+                <template id="message-template">
+                    <div class="message">
+                        <div class="col-md-2">Message <span class="messagenum">1</span>:</div>
+                        <div class="col-md-10 text">
+                            <textarea></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 actions-col">
+                            <button type="button" class="add_field_button"></button>
+                            <button type="button" class="remove_field_button"></button>
+                        </div>
+                    </div>
+                </template>
+                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+                <script src="js/jquery.min.js"></script>
+                <!-- Include all compiled plugins (below), or include individual files as needed -->
+                <script src="js/bootstrap.min.js"></script>
+                <script src="js/storage.js"></script>
+                <script src="js/knockout-3.2.0.js"></script>
+                <script src="js/admin.js"></script>
     </body>
 
 </html>

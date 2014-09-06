@@ -78,3 +78,6 @@ position: absolute;
   width: 100%;
   overflow: visible;
 }
+#tokeninput{
+  width: 360px;
+}
