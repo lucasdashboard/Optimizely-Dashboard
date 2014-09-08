@@ -103,12 +103,10 @@ var experimentSuccess = function (exps, textStats, jqXHR) {
       }
       
     }
-    //console.log(complete_projects)
     for(var id in complete_projects){
       
 
       project = new Project(id, complete_projects[id].name, complete_projects[id].exps.sort(experimentSorting))
-      //console.log(project);
       viewModel.projects.push(project)
       viewModel.projects.sort(projectSorting);
     }
@@ -180,8 +178,6 @@ var getProjectMode  = function(project_id, mode){
 
 var addProject = function(project_id, mode){
 
-  console.log(project_id);
-  console.log(mode);
   var projects = Storage.get(OPTIMIZELY_PROJECTS);
   if(projects != ""){
     projects = JSON.parse(projects);
