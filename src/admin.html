@@ -7,128 +7,545 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Travix Optimization Dashboard</title>
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		
+		 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <link rel="stylesheet" type="text/css" href="css/admin.css">
+		<script>
+		$(document).ready(function() {
+    var max_fields      = 3; //maximum input boxes allowed
+    var wrapper         = $(".value-col"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div><textarea class="form-control" rows="3"></textarea><button type="button" class="add_field_button"></button></button><button type="button" class="remove_field_button"></button></div>'); //add input box
+        }
+    });
+    $(wrapper).on("click",".remove_field_button", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
+		</script>
+		
         <link rel="stylesheet" type="text/css" href="css/style.css">
+		<style>
+		#footer {
+  bottom: 0;
+  position: absolute;
+  height: 100px;
+  background-color: #003366;
+  width: 100%;
+}
+#footer > .logo{
+  padding: 10px;
+  float: left;
+}
+
+		#header {
+
+  height: 100px;
+  background-color: #003366;
+  width: 100%;
+}
+#header > .logo{
+  padding: 10px;
+  float: left;
+}
+
+
+
+		
+		.container-fluid{padding: 0 35px;}
+		#data-col {
+border-right: 1px solid grey;
+}
+.row {
+margin-right: 10px;
+}
+				.condition-value-row {
+display: -webkit-flex;
+display: -ms-flexbox;
+display: flex;
+-webkit-align-items: center;
+-ms-flex-align: center;
+align-items: center;
+margin: 5px 0;
+}
+
+.condition-value-row .or-col {
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+text-align: right;
+color: #6b6b6b;
+font-size: 12px;
+}
+
+.condition-value-row .actions-col {
+padding-left: 10px;
+min-width: 44px;
+}
+
+.add_field_button, .condition .remove_field_button {
+width: 20px;
+height: 20px;
+border: none;
+}
+
+.remove_field_button {
+width: 20px;
+height: 20px;
+border: none;
+}
+
+.add_field_button {
+background: url("https://www.optimizely.com/static/img/add_button.png");
+}
+
+.remove_field_button {
+background: url("https://www.optimizely.com/static/img/delete_button.png");
+}
+
+#header > .marquee {
+width: 100%;
+float: right;
+overflow: hidden;
+margin-left: 100px;
+position: absolute;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+#header > .left {
+float: left;
+margin-left: 40px;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+#header > .right {
+float: right;
+margin-right: 40px;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+#experiments-running{
+  padding-left: 20px;
+}
+#big-num-experiments{
+font-weight: bold;
+font-size: 96px;  
+float:left;
+}
+#experiments-running-text {
+font-size: 41px;
+line-height: 35px;
+float: left;
+padding-top: 34px;
+padding-left: 6px;
+}
+
+		</style>
     </head>
     
     <body>
-        <div id="header">
-            <div class="logo">
-                <img src="images/logo-white.png" />
-            </div>
-            <div class="marquee">
-                <div class="left">Optimization Dashboard - Admin</div>
-            </div>
-            <div class="right">
-                <button type="button" href="src/index.html" class="btn btn-default">Go to Dashboard</button>
-            </div>
-        </div>
+	        <div id="header">
+          <div class="logo">
+            <img src="https://raw.githubusercontent.com/lucasdashboard/Optimizely-Dashboard/master/src/images/logo-white.png">
+          </div>
+         <div class="marquee">
+<div class="left">Optimization Dashboard - Admin</div></div>
+<div class="right"><button type="button" href="http://htmlpreview.github.io/?https://github.com/lucasdashboard/Optimizely-Dashboard/blob/master/src/index.html" class="btn btn-default">Go to Dashboard</button></div>
+                  
+
+
+        </div> 
         <div class="container-fluid" id="content">
+
             <div class="row">
                 <div class="col-md-6" id="data-col">
-                    <div class="row">
-                        <div class="col-md-6" id="Token">
-                             <h2>Token</h2>
+                        <div class="row">
+						 <div class="col-md-6" id="Token">
+						<h2>Token</h2>
+						<form class="navbar-form navbar-left" role="form">
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Enter token" >
+  </div>
+  <button type="submit" class="btn btn-default" >Submit</button>
+</form></div>
 
-                            <form class="navbar-form navbar-left" role="form" onSubmit="return false;" id="tokenform">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Enter token" id="tokeninput" />
-                                </div>
-                                <button type="submit" class="btn btn-default" id="tokensubmit">Submit</button>
-                                <input type="checkbox" data-bind="checked: filterArchived" /> <label>Filter Archived</label>
-                            </form>
+                        
+                            <div class="col-md-6" id="experiments-running">
+
+                              <div class="row">
+                                <div id="big-num-experiments">48</div>
+                                <div id="experiments-running-text">Running<br>Experiments </span></div>
+                              </div>
+
+
+</div>
                         </div>
-                        <div class="col-md-6" id="experiments-running">
-                            <div class="row" data-bind="visible: loaded() == 2">
-                                <div id="big-num-experiments" data-bind="text: numexps"></div>
-                                <div id="experiments-running-text">Running
-                                    <br/>Experiments</div>
-                            </div>
-                            <div class="row" data-bind="visible: loaded() == 1">
-                                <div id="experiments-running-text">Loading ...</div>
-                            </div>
-                            <div class="row" data-bind="visible: loaded() == 0">
-                                <div id="experiments-running-text">Please submit token</div>
-                            </div>                                                        
+                        <div class="row">
+                            <h2>Experiments</h2>
+
+
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="list-group-item">
+          <span class="badge">23</span>CTNL
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+    <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+    <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+    <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  
+ 
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="list-group-item">
+          <span class="badge">2</span>CTDE
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+		</div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="list-group-item">
+          <span class="badge">14</span>CTBE
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+		</div>
+    </div>
+  </div>
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="list-group-item">
+          <span class="badge">22</span>VWNL
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+		</div>
+    </div>
+  </div>
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="list-group-item">
+          <span class="badge">8</span>BUANL
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFive" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> CTNL CO 100% Follow Up
+    </label>
+  </div>
+		</div>
+    </div>
+  </div>
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" class="list-group-item">
+          <span class="badge">5</span>BUAUK
+        </a>
+      </h4>
+    </div>
+    <div id="collapseSix" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO1 visual in lightbox ticket guarentee FollowUp (100%)
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL CO2 BTN Text under - V1
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL Ogone - Different text button (var2 4.2% )
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Flightresult Item Change Background Airport Message - V2
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox">+ CTNL SR Xsell Hotel Banner (Top20Dest) FollowUp Var#2 C +10.8% CTR +32%
+    </label>
+  </div>
+		</div>
+    </div>
+  </div>
+</div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-6">
+							
+							</div>
                         </div>
                     </div>
-                    <div class="row" data-bind="visible: projects().length > 0">
-                         <h2>Experiments</h2>
 
-                        <div class="panel-group" id="accordion">
-                            <div class="panel panel-default" data-bind="foreach: projects">
-                                <div class="panel-heading"> 
-                                    <a data-toggle="collapse" data-parent="#accordion" class="list-group-item" data-bind="attr: { href: '#collapse' + id}">
-                                        <h4 class="panel-title" data-bind="text:name"></h4>       
-                                        <span class="badge" data-bind="text: experiments().length">0</span>
-                                    </a>
-                                    <div class="clear"></div>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse" data-bind="attr: { id: 'collapse' + id}">
-                                        <div class="options">
-                                          <div class="select-options">
-                                          <a>(un)select all</a> | <a>(un)select running</a> | <a>(un)select draft</a> | <a>(un)select paused</a></div>
-                                          
-                                          <div class="other-options">
-                                            test
-                                          </div>    
-                                          <div class="clear"></div>
-                                          </div>                                
-                                    <div class="panel-body" data-bind="foreach: experiments">
-
-                                        <div class="checkbox" >
-                                            <label>
-                                                <input type="checkbox" class="experiment-id-checkbox" data-bind="attr: {experiment_id : id}, checked: saved"/>
-
-                                                <span data-bind="text: description"> </span>
-                                                <span class="status" data-bind="text: '[' + status + ']', css: status">[Running]</span></label> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-6" id="visual-col">
-                    <div class="row">
-                        <div class="col-md-12" id="messages">
-                             <h1>Messages</h1>
-
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-default" id="savemessages">Save</button>
-                </div>
-                <div class="clear"></div>
-                <template id="message-template">
-                    <div class="message">
-                        <div class="col-md-2">Message <span class="messagenum">1</span>:</div>
-                        <div class="col-md-10 text">
-                            <textarea></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 actions-col">
-                            <button type="button" class="add_field_button"></button>
-                            <button type="button" class="remove_field_button"></button>
-                        </div>
-                    </div>
-                </template>
-                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-                <script src="js/jquery.min.js"></script>
-                <!-- Include all compiled plugins (below), or include individual files as needed -->
-                <script src="js/bootstrap.min.js"></script>
-                <script src="js/storage.js"></script>
-                <script src="js/knockout-3.2.0.js"></script>
-                <script src="js/admin.js"></script>
+				<h2>Messages</h2>
+				<div class="condition-value-row">
+					<div class="or-col">
+						<!--vue-if-->
+					</div>
+					<div class="value-col">
+						<textarea class="form-control" rows="3"></textarea>
+					</div>
+					<div class="actions-col">
+						<button type="button" class="add_field_button"></button>
+						<button type="button" class="remove_field_button"></button>
+					</div>
+				</div>			
+				<button type="button" class="btn btn-default">Save</button>
+				</div>
+			</div>
+        </div>
+          
+        
+        
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/admin.js"></script>
     </body>
 
 </html>
