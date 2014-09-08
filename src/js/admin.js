@@ -1,6 +1,7 @@
 var OPTIMIZELY_TOKEN_NAME = "optimizely_api_token";
 var OPTIMIZELY_MESSAGES = "optimizely_messages";
 var OPTIMIZELY_EXPERIMENTS = "optimizely_experiments";
+var OPTIMIZELY_PROJECTS = "optimizely_projects";
 
 window.projects = {}
 window.experiments = {}
@@ -11,10 +12,11 @@ var Project = function(id, name, experiments) {
     this.name = name;
     this.id = id;
     this.experiments = ko.observableArray(experiments);
- 
-    this.addChild = function() {
-        this.children.push("New child");
-    }.bind(this);
+    this.automaticSelect = ko.observable(getProjectMode(id));
+    this.automaticSelect.subscribe(function(newValue) {
+
+          addProject(id, newValue)
+        }, this);
 }
  
 // The view model is an abstract description of the state of the UI, but without any knowledge of the UI technology (HTML)
@@ -23,7 +25,17 @@ var viewModel = {
     projects: ko.observableArray(),
     numexps: ko.observable(0),
     loaded: ko.observable(0),
-    showRenderTimes: ko.observable(false)
+    showRenderTimes: ko.observable(false),
+    getProject : function(project_id){
+      var project = {}
+      for(var proj in this.projects()){
+        if(this.projects()[proj].id == project_id){
+          project = this.projects()[proj];
+          break;
+        }
+      }
+      return project;
+    }
 };
  
 ko.applyBindings(viewModel);
@@ -68,7 +80,16 @@ var experimentSuccess = function (exps, textStats, jqXHR) {
         var id = exps[exp].project_id;
 
 
-        exps[exp].saved = getSavedExperiment(exps[exp].id);
+        
+        exps[exp].check = ko.observable(getSavedExperiment(exps[exp].id))
+        exps[exp].check.subscribe(function(newValue) {
+
+          if(newValue){
+            addExperiment(this.id);
+          }else {
+            removeExperiment(this.id);
+          }
+        }, exps[exp]);
 
         complete_projects[id] = complete_projects[id] || {};
         complete_projects[id]["exps"] = complete_projects[id]["exps"] || []; 
@@ -121,16 +142,10 @@ var initProjectList = function () {
     $("#tokenform").submit(function () {
       viewModel.projects([])
       viewModel.numexps(0);
-        getProject(getTokenInput());
+      getProject(getTokenInput());
     });
-    $(document).on("change", ".experiment-id-checkbox", function(){
-      var expid = $(this).attr("experiment_id");
-      if($(this).prop('checked')){
-        addExperiment(expid);
-      } else {
-        removeExperiment(expid);
-      }
-    });
+
+
 
 }
 
@@ -138,7 +153,7 @@ var addExperiment = function(experiment_id){
   var experiments = Storage.get(OPTIMIZELY_EXPERIMENTS);
   if(experiments != ""){
     experiments = JSON.parse(experiments);
-    if(experiments.indexOf(experiment_id) == -1){
+    if(experiments[experiment_id] == -1){
       experiments.push(experiment_id);
     }
     Storage.set(OPTIMIZELY_EXPERIMENTS, JSON.stringify(experiments));
@@ -146,6 +161,52 @@ var addExperiment = function(experiment_id){
     Storage.set(OPTIMIZELY_EXPERIMENTS, JSON.stringify([experiment_id]))
   }
 }
+
+var getProjectMode  = function(project_id, mode){
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+     if(typeof(projects[project_id]) != "undefined"){
+      return projects[project_id]["mode"];
+    } else{
+      addProject(project_id, "0");
+      return "0";
+    }
+  } else {
+      addProject(project_id, "0");
+      return "0";    
+  }
+}
+
+var addProject = function(project_id, mode){
+
+  console.log(project_id);
+  console.log(mode);
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+
+    projects[project_id] = {"mode" : mode.toString()};
+    Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects));
+  }else{
+    id = project_id.toString();
+    projects = { id : {"mode": "0"}};
+    Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects))
+  }
+}
+
+var removeProject = function(project_id){
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+    delete projects[project_id];
+    Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects));
+    
+  }
+}
+
+
+
 var removeExperiment = function(experiment_id){
   var experiments = Storage.get(OPTIMIZELY_EXPERIMENTS);
   if(experiments != ""){
@@ -266,8 +327,48 @@ var createMessageFields = function (messages) {
 
 }
 
+var setupSelectBoxes = function(){
+  $(document).on("mousedown", ".select", function(){
+    checkBoxesWithStatus($(this));
+  });
+}
+
+var checkBoxesWithStatus = function(elem){
+    var status = getSelectAllStatus($(elem));
+    var project_id = $(elem).attr("project-id");
+    console.log(project_id);
+    var project = viewModel.getProject(project_id)
+    $(elem).toggleClass("checked")
+    var checked = $(elem).hasClass("checked");
+
+    console.log(project);
+    for(var exp in project.experiments()){
+
+      console.log(project.experiments()[exp]);
+      console.log(status);
+      if(shouldSelect(project.experiments()[exp], status)){
+        project.experiments()[exp].check(checked);
+      }
+    }
+
+}
+
+var getSelectAllStatus = function(elem){
+  return $(elem).attr("exp-status");
+}
+
+var shouldSelect = function(exp, status){
+  if(status == "All"){
+    return true;
+  } else if (status == exp.status){
+    return true;
+  }else {
+    return false
+  }
+}
 
 $(function () {
+    setupSelectBoxes();
     initProjectList();
     initMessages();
 });

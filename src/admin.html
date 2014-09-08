@@ -17,7 +17,7 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <link rel="stylesheet" type="text/css" href="css/admin.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
     </head>
     
     <body>
@@ -65,7 +65,7 @@
                          <h2>Experiments</h2>
 
                         <div class="panel-group" id="accordion">
-                            <div class="panel panel-default" data-bind="foreach: projects">
+                            <div class="panel panel-default" data-bind="foreach: {data: projects, as: 'project'}">
                                 <div class="panel-heading"> 
                                     <a data-toggle="collapse" data-parent="#accordion" class="list-group-item" data-bind="attr: { href: '#collapse' + id}">
                                         <h4 class="panel-title" data-bind="text:name"></h4>       
@@ -74,12 +74,42 @@
                                     <div class="clear"></div>
                                 </div>
                                 <div id="collapseOne" class="panel-collapse collapse" data-bind="attr: { id: 'collapse' + id}">
-                                        <div class="options">
-                                          <div class="select-options">
-                                          <a>(un)select all</a> | <a>(un)select running</a> | <a>(un)select draft</a> | <a>(un)select paused</a></div>
+                                        <div class="options row">
+                                          <div class="select-options col-md-6">
+                                          <a class="select all" data-bind="attr: { 'project-id': id }" exp-status="All">(un)select all</a> | 
+                                          <a class="select running" data-bind="attr: { 'project-id': id}" exp-status="Running">(un)select running</a> | 
+                                          <a class="select draft" data-bind="attr: { 'project-id': id }" exp-status="Not started">(un)select draft</a> | 
+                                          <a class="select paused" data-bind="attr: { 'project-id': id }" exp-status="Paused">(un)select paused</a> |
+                                          <a class="select archived" data-bind="attr: { 'project-id': id }" exp-status="Archived">(un)select archived</a></div>
                                           
-                                          <div class="other-options">
-                                            test
+                                          <div class="other-options col-md-6">
+                                            <form>
+                                                <div class="radio">
+                                                  <label>
+                                                    <input type="radio" name="optionsRadios" value="0" data-bind="checked: automaticSelect"/>
+                                                    Don't show project
+                                                  </label>
+                                                </div>                                                
+                                                <div class="radio">
+                                                  <label>
+                                                    <input type="radio" name="optionsRadios" value="1" data-bind="checked: automaticSelect"/>
+                                                    Manual select experiments
+                                                  </label>
+                                                </div>
+                                                <div class="radio">
+                                                  <label>
+                                                    <input type="radio" name="optionsRadios" value="2" data-bind="checked: automaticSelect" />
+                                                    Automatically show experiments with status:<br></label>
+                                                    <div class="auto-options">
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Running</label>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Paused</label><br/>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Draft</label>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Archived</label>
+                                                        </div>
+                                                        <p>and exclude all experiments checked below</p>
+                                                  
+                                                </div>
+                                            </form>
                                           </div>    
                                           <div class="clear"></div>
                                           </div>                                
@@ -87,10 +117,10 @@
 
                                         <div class="checkbox" >
                                             <label>
-                                                <input type="checkbox" class="experiment-id-checkbox" data-bind="attr: {experiment_id : id}, checked: saved"/>
+                                                <input type="checkbox" class="experiment-id-checkbox" data-bind="attr: {experiment_id : id}, checked: check, enable: project.automaticSelect() > '0'"/>
 
                                                 <span data-bind="text: description"> </span>
-                                                <span class="status" data-bind="text: '[' + status + ']', css: status">[Running]</span></label> 
+                                                <span class="status" data-bind="text: '[' + status + ']', css: status, enable: project.automaticSelect() > '0'">[Running]</span></label> 
                                         </div>
                                     </div>
                                 </div>
@@ -122,6 +152,8 @@
                         </div>
                     </div>
                 </template>
+
+
                 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
                 <script src="js/jquery.min.js"></script>
                 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -129,6 +161,10 @@
                 <script src="js/storage.js"></script>
                 <script src="js/knockout-3.2.0.js"></script>
                 <script src="js/admin.js"></script>
+
+
+
+
     </body>
 
 </html>
