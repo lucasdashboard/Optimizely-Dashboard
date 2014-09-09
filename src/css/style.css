@@ -1,4 +1,5 @@
-html {background-color: #eeeeee;}
+/* Dashboard --------------------------------------------------- */
+
 
 #loading {
     position:absolute;
@@ -64,9 +65,11 @@ border-radius: 2px;
 margin-bottom: 5px;
 }
 
+.overview{border-bottom: 1px solid #E4E4E4;"}
+
 #visual-col{padding: 0 40px;}
 
-#highlighted{margin-top: 6px;}
+.highlighted{padding: 6px;}
 
 .alert {
 padding: 15px;
@@ -113,6 +116,7 @@ display: inline-block;
 #footer > .logo{
   padding: 10px;
   float: left;
+  width: 4%;
 }
 #footer > .marquee {
 width: 100%;
@@ -162,4 +166,74 @@ border-radius: 4px;
 
 ul{list-style: none; font-size:25px; color: #3c5983;}
 
+/* Admin --------------------------------------------------- */
 
+	
+#header > .logo{
+
+}
+
+#header {
+
+  height: 100px;
+  background-color: #003366;
+  width: 100%;
+}
+#header > .logo{
+  padding: 10px;
+  float: left;
+}
+
+
+#header > .marquee {
+width: 100%;
+float: right;
+overflow: hidden;
+margin-left: 100px;
+position: absolute;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+#header > .left {
+float: left;
+margin-left: 40px;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+#header > .right {
+float: right;
+margin-right: 40px;
+height: 100px;
+color: white;
+font-size: 65px;
+}
+
+
+.add_field_button, .condition .remove_field_button {
+width: 20px;
+height: 20px;
+border: none;
+}
+
+.remove_field_button {
+width: 20px;
+height: 20px;
+border: none;
+}
+
+.add_field_button {
+background: url("https://www.optimizely.com/static/img/add_button.png");
+}
+
+.remove_field_button {
+background: url("https://www.optimizely.com/static/img/delete_button.png");
+}
+
+.logotravix{margin-top: 40px;}
+
+.list-group-item{line-height: 2;
+}
