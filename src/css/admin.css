@@ -1,3 +1,50 @@
+@media all and (min-width: 992px) {
+  .container-fluid
+  {
+      display:table;
+      width: 100%;
+      margin-top: -50px;
+      padding: 50px 0 0 0; /*set left/right padding according to needs*/
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+  }
+  .navbar-form{
+    float: none !important;
+  }
+  .container-fluid > .row
+  {
+      height: 100%;
+      display: table-row;
+  }
+  .container-fluid > .row > .col-md-6
+  {
+      display: table-cell;
+      float: none; /* thanks baxxabit */
+      vertical-align: top;
+  }
+
+  #data-col {
+      border-right: 1px solid grey;
+  }
+
+}
+@media all and (min-width: 992px) {
+
+}
+
+.auto-options {
+  padding-left: 10px;
+}
+
+.options.row{
+  display: table-row;
+}
+.options.row > .col-md-6{
+  display: table-cell;
+  float: none;
+  vertical-align: top;
+}
+
 .message textarea {
     width: 100%;
     height: 150px;
@@ -27,9 +74,6 @@
 }
 .container-fluid {
     padding: 0 35px;
-}
-#data-col {
-    border-right: 1px solid grey;
 }
 .row {
     margin-right: 10px;
