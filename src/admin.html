@@ -48,7 +48,7 @@
                                 <input type="checkbox" data-bind="checked: filterArchived" /> <label>Filter Archived</label>
                             </form>
                         </div>
-                        <div class="col-md-6" id="experiments-running">
+                        <div class="col-md-6" id="experiments-running" data-bind="visible: loaded() >= 0">
                             <div class="row" data-bind="visible: loaded() == 2">
                                 <div id="big-num-experiments" data-bind="text: numexps"></div>
                                 <div id="experiments-running-text">Running
