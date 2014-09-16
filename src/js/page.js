@@ -49,6 +49,7 @@ var downloadAllExperimentInfo = function (experiments){
       arg = arguments[agument];
       data = arg[0];
       
+      console.log(data)
       project_id = data.project_id;
       exp_to_proj_map[data.id] = project_id;
       if(projects.hasOwnProperty(project_id) ){
