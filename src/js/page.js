@@ -46,7 +46,8 @@ var downloadAllExperimentInfo = function (experiments){
 
   $.when.apply(null, downloads).done(function(){
     console.log(arguments);
-    arguments = arguments.length > 2 && arguments[1] == "success" ? [arguments[0]] : arguments;
+    arguments = arguments.length >= 2 && arguments[1] == "success" ? [arguments] : arguments;
+    console.log(arguments);
     for(var argument in arguments){
       arg = arguments[argument];
       data = arg[0];
