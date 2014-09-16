@@ -45,6 +45,7 @@ var downloadAllExperimentInfo = function (experiments){
   projects = JSON.parse(projects);
 
   $.when.apply(null, downloads).done(function(){
+    console.log(arguments);
     for(var agument in arguments){
       arg = arguments[agument];
       data = arg[0];
