@@ -83,7 +83,8 @@ var experimentSuccess = function (exps, textStats, jqXHR) {
         
         exps[exp].check = ko.observable(getSavedExperiment(exps[exp].id))
         exps[exp].check.subscribe(function(newValue) {
-
+          console.log(newValue);
+          console.log(this.id);
           if(newValue){
             addExperiment(this.id);
           }else {
@@ -150,9 +151,12 @@ var initProjectList = function () {
 var addExperiment = function(experiment_id){
   var experiments = Storage.get(OPTIMIZELY_EXPERIMENTS);
   if(experiments != ""){
+    console.log(experiment_id);
     experiments = JSON.parse(experiments);
-    if(experiments[experiment_id] == -1){
+    console.log(experiments);
+    if(experiments.indexOf(experiment_id) == -1){
       experiments.push(experiment_id);
+      console.log(experiments);
     }
     Storage.set(OPTIMIZELY_EXPERIMENTS, JSON.stringify(experiments));
   }else{
@@ -221,8 +225,7 @@ var getSavedExperiment = function(experiment_id){
   if(experiments != ""){
 
     experiments = JSON.parse(experiments);
-    var result = experiments.indexOf(experiment_id.toString()) > -1;
-    
+    var result = experiments.indexOf(experiment_id) > -1 || experiments.indexOf(experiment_id.toString()) > -1 ;
     return result;
   } else {
     return false;
@@ -233,20 +236,20 @@ var getSavedExperiment = function(experiment_id){
  */
 var getProject = function (token) {
     viewModel.loaded(1);
-    doAPICAll('https://www.optimizelyapis.com/experiment/v1/projects/', projectSuccess);
+    doAPICall('https://www.optimizelyapis.com/experiment/v1/projects/', projectSuccess);
 };
 
 /**
  * Do api call to retreive all experiment data
  */
 var getExperimentList = function (project_id) {
-    doAPICAll('https://www.optimizelyapis.com/experiment/v1/projects/' + project_id + '/experiments/', experimentSuccess);
+    doAPICall('https://www.optimizelyapis.com/experiment/v1/projects/' + project_id + '/experiments/', experimentSuccess);
 }
 
 /**
  * Set proper headers and do ajax call.
  */
-var doAPICAll = function (url, func) {
+var doAPICall = function (url, func) {
     return $.ajax({
         dataType: "json",
         url: url,
@@ -268,7 +271,9 @@ var setMessages = function (messages) {
  * Save all messages
  */
 var getMessages = function () {
-    return JSON.parse(Storage.get(OPTIMIZELY_MESSAGES));
+  var messages = Storage.get(OPTIMIZELY_MESSAGES);
+  messages = messages == "" ? [] : JSON.parse(messages);
+  return messages;
 }
 
 var initMessages = function () {
@@ -332,16 +337,12 @@ var setupSelectBoxes = function(){
 var checkBoxesWithStatus = function(elem){
     var status = getSelectAllStatus($(elem));
     var project_id = $(elem).attr("project-id");
-    console.log(project_id);
     var project = viewModel.getProject(project_id)
     $(elem).toggleClass("checked")
     var checked = $(elem).hasClass("checked");
 
-    console.log(project);
     for(var exp in project.experiments()){
 
-      console.log(project.experiments()[exp]);
-      console.log(status);
       if(shouldSelect(project.experiments()[exp], status)){
         project.experiments()[exp].check(checked);
       }

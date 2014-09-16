@@ -18,24 +18,28 @@
     </head>
     
     <body>
-        <div class="container-fluid" id="content">
+        <div class="container-fluid" id="content" data-bind="visible: !initLoading()">
             <div class="row">
                 <div class="col-md-6" id="data-col">
                     <div class="row overview">
 						<div class="col-md-6" id="project-chart"></div>
 						<div class="col-md-6" id="experiments-running">
 							<div class="row">
-								<div id="big-num-experiments">48</div>
-                                <div id="experiments-running-text">Running<br>Experiments </span></div>
+                                <div class="col-md-12">
+								    <div id="big-num-experiments">48</div>
+                                    <div id="experiments-running-text">Running<br>Experiments </span></div>
+                                </div>
                             </div>
 							<div class="row">
-								<ul>
-									<li><span class="badge">14</span> Cheaptickets.NL</li>
-									<li><span class="badge">12</span> Cheaptickets.BE</li>
-									<li><span class="badge">10</span> Budgetair.NL</li>
-									<li><span class="badge">8</span> Vliegwinkel.NL</li>
-									<li><span class="badge">4</span> Others</li>
-								</ul>
+                                <div class="col-md-12">
+    								<ul>
+    									<li><span class="badge">14</span> Cheaptickets.NL</li>
+    									<li><span class="badge">12</span> Cheaptickets.BE</li>
+    									<li><span class="badge">10</span> Budgetair.NL</li>
+    									<li><span class="badge">8</span> Vliegwinkel.NL</li>
+    									<li><span class="badge">4</span> Others</li>
+    								</ul>
+                                </div>
 							</div> 
 							<div class="row">
 								<div class="col-md-6"></div>
@@ -53,21 +57,26 @@
 					</div>
 				</div>
 				<div class="col-md-6" id="visual-col">
-					<div class="row" style="height:430px">
-						<h1>Control</h1>
-						<img src="https://travix.atlassian.net/wiki/download/attachments/62128601/image2014-6-5%2014%3A19%3A42.png?version=1&modificationDate=1401970782552&api=v2">
-					</div>
-					<div class="row"  style="height:430px">
-						<h1>Variant</h1>
-						<img src="https://travix.atlassian.net/wiki/download/attachments/62128601/image2014-6-5%2014%3A19%3A18.png?version=1&modificationDate=1401970758470&api=v2">
-                    </div>
-					<div class="row">
-						<h1 class="goal"><span class="triangle"></span>27% Conversion</h1>
-                    </div>
-				</div>
+            <div class="row">  
+              <div class="col-md-12">
+						    <h1>Control</h1>
+              </div>
+
+					  </div>
+
+  					<div class="row">  
+              <div class="col-md-12">
+  						  <h1>Variant</h1>
+              </div>
+            </div>
+  					<div class="row">
+  						<h1 class="goal"><span class="triangle"></span>27% Conversion</h1>
+            </div>
+          </div>
+
 			</div>
 		</div>
-        <div id="footer">
+        <div id="footer" data-bind="visible: !initLoading()">
 			<div class="logo">
 				<img src="images/logo-white.png">
 			</div>
@@ -79,8 +88,9 @@
 				<div class="right"></div>
 			</div>          
 		</div>
-		<div id="loading">
-			<h2>Loading ...<br><img alt="loading" src="images/loading-32.gif" style="padding-top:20px"></h2>
+		<div id="loading" data-bind="visible: initLoading()">
+			<h2 data-bind="visible: !loadingError()">Loading ...<br><img alt="loading" src="images/loading-32.gif" style="padding-top:20px"></h2>
+            <h2 data-bind="visible: loadingError()">Not all data set, we are redirecting you to the admin page</h2>
 		</div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="js/jquery.min.js"></script>
@@ -89,6 +99,8 @@
         <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/d3.v3.min.js"></script>
         <script src="js/storage.js"></script>
+        <script src="js/chart.js"></script>
+        <script src="js/knockout-3.2.0.js"></script>
         <script src="js/page.js"></script>
     </body>
 

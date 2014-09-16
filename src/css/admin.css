@@ -115,8 +115,7 @@
 .remove_field_button {
     background: url("https://www.optimizely.com/static/img/delete_button.png");
 }
-#header > .marquee {
-    width: 100%;
+#header > .title {
     float: right;
     overflow: hidden;
     margin-left: 100px;
