@@ -18,7 +18,7 @@
     </head>
     
     <body>
-        <div class="container-fluid" id="content" data-bind="visible: !initLoading()">
+        <div class="container-fluid" id="content" style="display:none"  data-bind="visible: !initLoading()">
             <div class="row">
                 <div class="col-md-6" id="data-col">
                     <div class="row overview">
@@ -88,9 +88,9 @@
 				<div class="right"></div>
 			</div>          
 		</div>
-		<div id="loading" data-bind="visible: initLoading()">
-			<h2 data-bind="visible: !loadingError()">Loading ...<br><img alt="loading" src="images/loading-32.gif" style="padding-top:20px"></h2>
-            <h2 data-bind="visible: loadingError()">Not all data set, we are redirecting you to the admin page</h2>
+		<div id="loading" style="display:none" data-bind="visible: initLoading()">
+			<h2 style="display:none" data-bind="visible: !loadingError()">Loading ...<br><img alt="loading" src="images/loading-32.gif" style="padding-top:20px"></h2>
+            <h2 style="display:none" data-bind="visible: loadingError()">Not all data set, we are redirecting you to the admin page</h2>
 		</div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="js/jquery.min.js"></script>
