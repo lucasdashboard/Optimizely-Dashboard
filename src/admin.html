@@ -102,10 +102,10 @@
                                                     <input type="radio" name="optionsRadios" value="2" data-bind="checked: automaticSelect" />
                                                     Automatically show experiments with status:<br></label>
                                                     <div class="auto-options">
-                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Running</label>
-                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Paused</label><br/>
-                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Draft</label>
-                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2'"/>Archived</label>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2', checked: autmaticRunning"/>Running</label>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2', checked: autmaticPaused"/>Paused</label><br/>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2', checked: autmaticDraft"/>Draft</label>
+                                                        <label class="checkbox-inline"><input type="checkbox" data-bind="enable: automaticSelect() == '2', checked: autmaticArchived"/>Archived</label>
                                                         </div>
                                                         <p>and exclude all experiments checked below</p>
                                                   

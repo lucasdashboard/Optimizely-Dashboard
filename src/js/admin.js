@@ -1,7 +1,14 @@
 var OPTIMIZELY_TOKEN_NAME = "optimizely_api_token";
 var OPTIMIZELY_MESSAGES = "optimizely_messages";
-var OPTIMIZELY_EXPERIMENTS = "optimizely_experiments";
+//var OPTIMIZELY_EXPERIMENTS = "optimizely_experiments";
 var OPTIMIZELY_PROJECTS = "optimizely_projects";
+var DEFAULT_PROJECT_MODE = "0";
+
+var STATUS_RUNNING = 0;
+var STATUS_PAUSED = 1;
+var STATUS_DRAFT = 2;
+var STATUS_ARCHIVED = 3;
+
 
 window.projects = {}
 window.experiments = {}
@@ -14,11 +21,54 @@ var Project = function(id, name, experiments) {
     this.experiments = ko.observableArray(experiments);
     this.automaticSelect = ko.observable(getProjectMode(id));
     this.automaticSelect.subscribe(function(newValue) {
-
           addProject(id, newValue)
         }, this);
+    this.autmaticRunning = ko.observable(getProjectModeSetting(id, STATUS_RUNNING))
+    this.autmaticRunning.subscribe(function(newValue) {
+          setAutomaticMode(id, STATUS_RUNNING, newValue)
+        }, viewModel);
+
+
+    this.autmaticPaused = ko.observable(getProjectModeSetting(id, STATUS_PAUSED));
+    this.autmaticPaused.subscribe(function(newValue) {
+          setAutomaticMode(id, STATUS_PAUSED, newValue);
+        }, viewModel);
+
+    this.autmaticDraft = ko.observable(getProjectModeSetting(id, STATUS_DRAFT));
+    this.autmaticDraft.subscribe(function(newValue) {
+          setAutomaticMode(id, STATUS_DRAFT, newValue);
+        }, viewModel);
+
+    this.autmaticArchived = ko.observable(getProjectModeSetting(id, STATUS_ARCHIVED));
+    this.autmaticArchived.subscribe(function(newValue) {
+          setAutomaticMode(id, STATUS_ARCHIVED, newValue);
+        }, viewModel);    
 }
- 
+
+var getProjectModeSetting = function(id, status){
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+    projects[id]["automatic_modes"] = projects[id]["automatic_modes"] || {};    
+    return typeof(projects[id]["automatic_modes"][status]) != "undefined" ?  projects[id]["automatic_modes"][status] : false;
+  }
+  console.log(false);
+  return false;
+}
+
+var setAutomaticMode = function(project_id, status, value){
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+    if(typeof(projects[project_id]) != "undefined"){
+      projects[project_id]["automatic_modes"] = projects[project_id]["automatic_modes"] || {};
+      projects[project_id]["automatic_modes"][status] = value;
+      Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects));
+    }
+  }
+}
+
+
 // The view model is an abstract description of the state of the UI, but without any knowledge of the UI technology (HTML)
 var viewModel = {
     filterArchived: ko.observable(true),
@@ -81,14 +131,14 @@ var experimentSuccess = function (exps, textStats, jqXHR) {
 
 
         
-        exps[exp].check = ko.observable(getSavedExperiment(exps[exp].id))
+        exps[exp].check = ko.observable(getSavedExperiment(exps[exp].id, exps[exp].project_id));
         exps[exp].check.subscribe(function(newValue) {
           console.log(newValue);
           console.log(this.id);
           if(newValue){
-            addExperiment(this.id);
+            addExperiment(this);
           }else {
-            removeExperiment(this.id);
+            removeExperiment(this);
           }
         }, exps[exp]);
 
@@ -148,51 +198,68 @@ var initProjectList = function () {
 
 }
 
-var addExperiment = function(experiment_id){
-  var experiments = Storage.get(OPTIMIZELY_EXPERIMENTS);
-  if(experiments != ""){
-    console.log(experiment_id);
-    experiments = JSON.parse(experiments);
-    console.log(experiments);
-    if(experiments.indexOf(experiment_id) == -1){
-      experiments.push(experiment_id);
-      console.log(experiments);
+var addExperiment = function(experiment){
+  var experiment_id = experiment.id;
+  var project_mode = viewModel.getProject(experiment.project_id).automaticSelect();
+  var projects = addProject(experiment.project_id, project_mode);
+  if(projects[experiment.project_id].hasOwnProperty("experiments")){
+    if(projects[experiment.project_id]["experiments"].indexOf(experiment_id) == -1){
+      projects[experiment.project_id]["experiments"].push(experiment_id);
     }
-    Storage.set(OPTIMIZELY_EXPERIMENTS, JSON.stringify(experiments));
+    Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects))
   }else{
-    Storage.set(OPTIMIZELY_EXPERIMENTS, JSON.stringify([experiment_id]))
+    projects[experiment.project_id]["experiments"] = [experiment_id];
+    Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects))
   }
 }
 
-var getProjectMode  = function(project_id, mode){
+var getProjectMode  = function(project_id){
   var projects = Storage.get(OPTIMIZELY_PROJECTS);
   if(projects != ""){
     projects = JSON.parse(projects);
      if(typeof(projects[project_id]) != "undefined"){
       return projects[project_id]["mode"];
     } else{
-      addProject(project_id, "0");
-      return "0";
+      return setDefaultProjectMode();
     }
   } else {
-      addProject(project_id, "0");
-      return "0";    
+      return setDefaultProjectMode();    
   }
+}
+
+var setDefaultProjectMode = function(project_id){
+  addProject(project_id, DEFAULT_PROJECT_MODE);
+  return DEFAULT_PROJECT_MODE;
+}
+
+var getSavedProjects = function(project_id){
+  var projects = Storage.get(OPTIMIZELY_PROJECTS);
+  if(projects != ""){
+    projects = JSON.parse(projects);
+    return projects;
+  } else {
+      return {}; 
+  }  
 }
 
 var addProject = function(project_id, mode){
 
+
   var projects = Storage.get(OPTIMIZELY_PROJECTS);
   if(projects != ""){
     projects = JSON.parse(projects);
-
-    projects[project_id] = {"mode" : mode.toString()};
+    if(projects.hasOwnProperty(project_id)){
+      projects[project_id]["mode"] = mode.toString();
+    } else {
+      projects[project_id] = {"mode" : mode.toString()};
+    }
     Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects));
   }else{
     id = project_id.toString();
-    projects = { id : {"mode": "0"}};
+    projects = { id : {"mode": mode}};
     Storage.set(OPTIMIZELY_PROJECTS, JSON.stringify(projects))
   }
+  return projects;
 }
 
 var removeProject = function(project_id){
@@ -219,14 +286,12 @@ var removeExperiment = function(experiment_id){
   }
 }
 
-var getSavedExperiment = function(experiment_id){
-  var experiments = Storage.get(OPTIMIZELY_EXPERIMENTS);
+var getSavedExperiment = function(experiment_id, project_id){
+  var projects = getSavedProjects();
   
-  if(experiments != ""){
-
-    experiments = JSON.parse(experiments);
-    var result = experiments.indexOf(experiment_id) > -1 || experiments.indexOf(experiment_id.toString()) > -1 ;
-    return result;
+  if(projects.hasOwnProperty(project_id)){
+    projects[project_id]["experiments"] = projects[project_id]["experiments"] || [];
+    return projects[project_id]["experiments"].indexOf(experiment_id) > -1;
   } else {
     return false;
   }
